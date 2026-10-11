@@ -9,9 +9,7 @@ import time
 import redpitaya_scpi as scpi
 from scipy.signal import butter, filtfilt, hilbert
 
-# ==========================================
 # 1. KONFIGURASI
-# ==========================================
 IP = '169.254.66.156'
 FREQ = 5000000      
 AMPL = 1.0          
