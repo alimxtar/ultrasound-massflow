@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Output hasil pengukuran (dibuat otomatis oleh skrip di root)
+/plot_*.png
+/hasil_*.csv
+/massflow_16ch_profile.png
+/massflow_16ch_envelope.npy
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
