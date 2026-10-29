@@ -9,25 +9,11 @@ import matplotlib.pyplot as plt
 import time
 import datetime
 import redpitaya_scpi as scpi
+from config import (IP_ADDRESS, FREQ_HZ, N_CYCLES, AWG_VOLT, ACQ_DLY, ACQ_DEC,
+                    FILTER_LOW, FILTER_HIGH, DIGITAL_GAIN, MA_WINDOW,
+                    NOISE_THRESHOLD, BLANK_US)
 import pandas as pd
 from scipy.signal import butter, filtfilt, hilbert
-
-# ==========================================
-# 1. KONFIGURASI
-# ==========================================
-IP_ADDRESS   = 'RP-F0B91C.LOCAL'
-FREQ_HZ      = 5_000_000   
-N_CYCLES     = 1           
-AWG_VOLT     = 1.0         
-ACQ_DLY      = 8192        
-ACQ_DEC      = 2           
-
-FILTER_LOW      = 3_000_000  
-FILTER_HIGH     = 4_800_000  
-DIGITAL_GAIN    = 12.0       
-MA_WINDOW       = 128         
-NOISE_THRESHOLD = 0.15       
-BLANK_US        = 2.5  
 
 # ==========================================
 # 2. INISIALISASI & PENGAMBILAN DATA
@@ -85,7 +71,7 @@ while True:
 
 print("Mengunduh data...")
 raw_str = rp.txrx_txt('ACQ:SOUR1:DATA?').strip('{}\n\r')
-data_full = np.fromstring(raw_str, sep=',')
+data_full = np.array(raw_str.split(','), dtype=float)
 
 rp.tx_txt('OUTPUT1:STATE OFF')
 rp.close()

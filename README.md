@@ -26,6 +26,7 @@ profil penampang pipa dengan 16 transduser. Ini adalah bagian dari riset alat uk
 | [`massflo_single.py`](massflo_single.py) | Satu channel, sekali tembak. Menampilkan sinyal mentah dan envelope, lalu menyimpan `plot_visual_<waktu>.png` dan `hasil_visual_<waktu>.csv`. |
 | [`massflo_single_rt.py`](massflo_single_rt.py) | Satu channel, real-time. Grafik diperbarui terus beserta ToF air. Hentikan dengan `Ctrl+C`. |
 | [`massflo.py`](massflo.py) | Pemindaian 16 channel lewat multiplexer. Menampilkan waterfall profil pipa, lalu menyimpan `massflow_16ch_profile.png` dan `massflow_16ch_envelope.npy`. |
+| [`config.py`](config.py) | Konfigurasi bersama (alamat Red Pitaya, parameter AWG/ADC, DSP) yang dipakai ketiga skrip di atas. |
 | [`redpitaya_scpi.py`](redpitaya_scpi.py) | Pustaka SCPI resmi dari Red Pitaya (pihak ketiga). |
 | [`archive/`](archive/) | Versi-versi lama skrip (nama berkas = tanggal `DDMMYY_HHMM`) dan [`dokumentasi_plot/`](archive/dokumentasi_plot/) berisi hasil plot/CSV dari pengujian 30 Sep – 4 Okt 2026. |
 
@@ -51,9 +52,8 @@ pip install -r requirements.txt
 ## Penggunaan
 
 1. Nyalakan Red Pitaya dan aktifkan server SCPI (web interface → Development → SCPI server).
-2. Sesuaikan alamat Red Pitaya di bagian **KONFIGURASI** pada skrip:
-   - `massflo_single.py` / `massflo_single_rt.py`: `IP_ADDRESS = 'RP-F0B91C.LOCAL'`
-   - `massflo.py`: `IP = '169.254.66.156'`
+2. Sesuaikan `IP_ADDRESS` di [`config.py`](config.py) (hostname `RP-F0B91C.LOCAL` atau IP langsung,
+   mis. `169.254.66.156`).
 3. Jalankan skrip yang diinginkan:
 
 ```bash
@@ -64,13 +64,13 @@ python massflo.py             # scan 16 channel
 
 ## Parameter utama
 
-Semua parameter ada di bagian **KONFIGURASI** di awal tiap skrip.
+Semua parameter diatur di [`config.py`](config.py).
 
 | Parameter | Nilai | Keterangan |
 |---|---|---|
-| `FREQ_HZ` / `FREQ` | 5 MHz | Frekuensi burst |
-| `N_CYCLES` / `BURST_CYCLES` | 1 | Jumlah siklus per burst |
-| `AWG_VOLT` / `AMPL` | 1,0 V | Amplitudo eksitasi |
+| `FREQ_HZ` | 5 MHz | Frekuensi burst |
+| `N_CYCLES` | 1 | Jumlah siklus per burst |
+| `AWG_VOLT` | 1,0 V | Amplitudo eksitasi |
 | `ACQ_DEC` | 2 | Decimation ADC (125 MS/s ÷ 2 = 62,5 MS/s) |
 | `ACQ_DLY` | 8192 | Trigger delay (sampel) |
 | `FILTER_LOW` – `FILTER_HIGH` | 3,0 – 4,8 MHz | Pita bandpass |

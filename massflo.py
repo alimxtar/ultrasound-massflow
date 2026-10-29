@@ -7,38 +7,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import redpitaya_scpi as scpi
+from config import (IP_ADDRESS, FREQ_HZ, N_CYCLES, AWG_VOLT, ACQ_DLY, ACQ_DEC,
+                    FILTER_LOW, FILTER_HIGH, DIGITAL_GAIN, MA_WINDOW,
+                    NOISE_THRESHOLD, BLANK_US)
 from scipy.signal import butter, filtfilt, hilbert
-
-# 1. KONFIGURASI
-IP = '169.254.66.156'
-FREQ = 5000000      
-AMPL = 1.0          
-BURST_CYCLES = 1    
-ACQ_DLY = 8192      
-ACQ_DEC = 2         
-
-# Parameter DSP Tingkat Lanjut
-FILTER_LOW      = 3_000_000  
-FILTER_HIGH     = 4_800_000  
-DIGITAL_GAIN    = 12.0       
-MA_WINDOW       = 128         
-NOISE_THRESHOLD = 0.15       
-BLANK_US        = 2.5  
 
 # ==========================================
 # 2. INISIALISASI
 # ==========================================
-rp = scpi.scpi(IP)
+rp = scpi.scpi(IP_ADDRESS)
 print('Berhasil Terhubung ke Red Pitaya')
 
 rp.tx_txt('GEN:RST')
 rp.tx_txt('ACQ:RST')
 
 rp.tx_txt('SOUR1:FUNC SINE')
-rp.tx_txt(f'SOUR1:FREQ:FIX {FREQ}')
-rp.tx_txt(f'SOUR1:VOLT {AMPL}')
+rp.tx_txt(f'SOUR1:FREQ:FIX {FREQ_HZ}')
+rp.tx_txt(f'SOUR1:VOLT {AWG_VOLT}')
 rp.tx_txt('SOUR1:BURS:STAT BURST')
-rp.tx_txt(f'SOUR1:BURS:NCYC {BURST_CYCLES}')
+rp.tx_txt(f'SOUR1:BURS:NCYC {N_CYCLES}')
 rp.tx_txt('SOUR1:BURS:NOR 1')
 rp.tx_txt('SOUR1:INITValue 0')
 rp.tx_txt('SOUR1:BURS:LASTValue 0')
@@ -101,7 +88,7 @@ for ch in range(16):
             
     # Ambil Data (C-Level Parser)
     raw_str = rp.txrx_txt('ACQ:SOUR1:DATA?').strip('{}\n\r')
-    data_full = np.fromstring(raw_str, sep=',')
+    data_full = np.array(raw_str.split(','), dtype=float)
     rp.tx_txt('OUTPUT1:STATE OFF')
     
     # --- DSP PER CHANNEL ---
